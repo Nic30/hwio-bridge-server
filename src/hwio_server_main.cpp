@@ -22,7 +22,6 @@ void signal_handler( __attribute__((unused)) int signal) {
 }
 
 void init_signal_handler() {
-
 	sigset_t mask;
 	sigset_t orig_mask;
 	struct sigaction act;
