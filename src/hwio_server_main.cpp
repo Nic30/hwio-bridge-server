@@ -17,13 +17,38 @@ void print_hwio_server_help() {
 	std::cout << hwio_help_str();
 }
 
-void signal_handler(int signal) {
-	if (signal == SIGINT)
-		run_server_flag = false;
+void signal_handler( __attribute__((unused)) int signal) {
+	run_server_flag = false;
 }
 
+void init_signal_handler() {
+
+	sigset_t mask;
+	sigset_t orig_mask;
+	struct sigaction act;
+
+	memset(&act, 0, sizeof(act));
+	act.sa_handler = signal_handler;
+
+	// This server should shut down on SIGTERM.
+	if (sigaction(SIGTERM, &act, 0)) {
+		perror("sigaction");
+		exit(1);
+	}
+
+	sigemptyset(&mask);
+	sigaddset(&mask, SIGTERM);
+
+	if (sigprocmask(SIG_BLOCK, &mask, &orig_mask) < 0) {
+		perror("sigprocmask");
+		exit(1);
+	}
+}
+
+
 int main(int argc, char * argv[]) {
-	 std::signal(SIGINT, signal_handler);
+	init_signal_handler();
+
 
 	auto bus = hwio_init(argc, argv);
 	if (bus == nullptr) {
@@ -55,7 +80,7 @@ int main(int argc, char * argv[]) {
 
 		case '?':
 		default:
-			std::cerr << "Unknown cli argument" << std::endl;
+			std::cerr << "Unknown CLI argument" << std::endl;
 			delete bus;
 			print_hwio_server_help();
 			exit(0);
@@ -63,7 +88,7 @@ int main(int argc, char * argv[]) {
 		}
 	}
 
-	std::cout << "[INFO] Runing hwio_server on " << server_address << " ..." << std::endl;
+	std::cout << "[INFO] Running hwio_server on " << server_address << " ..." << std::endl;
 
 	std::string server_addr_str(server_address);
 	struct addrinfo * addr = parse_ip_and_port(server_addr_str);
