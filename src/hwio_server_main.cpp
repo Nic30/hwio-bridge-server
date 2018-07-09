@@ -91,7 +91,7 @@ int main(int argc, char * argv[]) {
 
 	std::string server_addr_str(server_address);
 	struct addrinfo * addr = parse_ip_and_port(server_addr_str);
-	Hwio_server server(addr, {bus});
+	HwioServer server(addr, {bus});
 
 	server.prepare_server_socket();
 	server.handle_client_msgs(&run_server_flag);
