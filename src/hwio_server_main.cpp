@@ -14,6 +14,8 @@ void print_hwio_server_help() {
 	std::cout << "## hwio_server ##" << std::endl;
 	std::cout << "-a <ip:port> or --address <ip:port> where to run server default "
 			  << DEFAULT_ADDR << std::endl;
+	std::cout << "--log <level>  logERROR=0, logWARNING=1, logINFO=2, logDEBUG=3" << std::endl;
+	std::cout << "--help to show this help msg" << std::endl;
 	std::cout << hwio_help_str();
 }
 
@@ -57,10 +59,12 @@ int main(int argc, char * argv[]) {
 	const option long_opts[] = { //
 			{ "address", no_argument, nullptr, 'a' },     //
 			{ "help", required_argument, nullptr, 'h' },  //
+			{ "log", required_argument, nullptr, 'l' },   //
 			{ nullptr, no_argument, nullptr, 0 }          //
 	};
 
 	const char * server_address = DEFAULT_ADDR;
+	HwioServer::loglevel_e logLevel = HwioServer::loglevel_e::logWARNING;
 
 	while (true) {
 		const auto opt = getopt_long(argc, argv, "a:h", long_opts, nullptr);
@@ -75,6 +79,9 @@ int main(int argc, char * argv[]) {
 
 		case 'a':
 			server_address = optarg;
+			break;
+		case 'l':
+			logLevel = (HwioServer::loglevel_e) std::stoi(optarg);
 			break;
 
 		case '?':
@@ -92,6 +99,7 @@ int main(int argc, char * argv[]) {
 	std::string server_addr_str(server_address);
 	struct addrinfo * addr = parse_ip_and_port(server_addr_str);
 	HwioServer server(addr, {bus});
+	server.log_level = logLevel;
 
 	server.prepare_server_socket();
 	server.handle_client_msgs(&run_server_flag);
