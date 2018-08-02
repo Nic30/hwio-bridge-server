@@ -94,7 +94,8 @@ int main(int argc, char * argv[]) {
 		}
 	}
 
-	std::cout << "[INFO] Running hwio_server on " << server_address << " ..." << std::endl;
+	std::cout << "[INFO] Running hwio_server (build" << __TIMESTAMP__<< ") on "
+			<< server_address << " ..." << std::endl;
 
 	std::string server_addr_str(server_address);
 	struct addrinfo * addr = parse_ip_and_port(server_addr_str);
