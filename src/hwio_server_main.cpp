@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
 			std::cerr << "Unknown CLI argument" << std::endl;
 			delete bus;
 			print_hwio_server_help();
-			exit(0);
+			exit(1);
 			break;
 		}
 	}
