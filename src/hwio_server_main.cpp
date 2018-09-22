@@ -3,12 +3,14 @@
 #include <hwio/hwio_remote_utils.h>
 #include <iostream>
 #include <csignal>
+#include <memory>
 
 using namespace hwio;
 
 const char * DEFAULT_ADDR = "0.0.0.0:8896";
 
 static bool run_server_flag = true;
+HwioServer::loglevel_e logLevel = HwioServer::loglevel_e::logWARNING;
 
 void print_hwio_server_help() {
 	std::cout << "## hwio_server ##" << std::endl;
@@ -20,6 +22,8 @@ void print_hwio_server_help() {
 }
 
 void signal_handler( __attribute__((unused)) int signal) {
+	if (logLevel >= HwioServer::loglevel_e::logINFO)
+		std::cout << "SIGTERM recieved" << std::endl;
 	run_server_flag = false;
 }
 
@@ -55,6 +59,7 @@ int main(int argc, char * argv[]) {
 	if (bus == nullptr) {
 		throw std::runtime_error("Can not initialize HWIO");
 	}
+	std::unique_ptr<ihwio_bus> _bus(bus);
 
 	const option long_opts[] = { //
 			{ "address", no_argument, nullptr, 'a' },     //
@@ -64,7 +69,6 @@ int main(int argc, char * argv[]) {
 	};
 
 	const char * server_address = DEFAULT_ADDR;
-	HwioServer::loglevel_e logLevel = HwioServer::loglevel_e::logWARNING;
 
 	while (true) {
 		const auto opt = getopt_long(argc, argv, "a:h", long_opts, nullptr);
@@ -73,9 +77,8 @@ int main(int argc, char * argv[]) {
 
 		switch (opt) {
 		case 'h':
-			delete bus;
 			print_hwio_server_help();
-			break;
+			return 0;
 
 		case 'a':
 			server_address = optarg;
@@ -87,7 +90,6 @@ int main(int argc, char * argv[]) {
 		case '?':
 		default:
 			std::cerr << "Unknown CLI argument" << std::endl;
-			delete bus;
 			print_hwio_server_help();
 			exit(1);
 			break;
