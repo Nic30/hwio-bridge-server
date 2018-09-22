@@ -2,6 +2,9 @@
 
 This server allow to share devices with remote clients. Client see server as hwio_remote_bus instance which implements ihwio_bus interface and can be used as usuall.
 
+## Installation
+
+This project has CMake managed build without anything special. You need to have [libhwio](https://github.com/Nic30/libhwio) installed (and there is a description how to build and install CMake libs. as well).
 
 ## Server plugins
 
