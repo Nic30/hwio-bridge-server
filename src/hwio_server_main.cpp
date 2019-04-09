@@ -114,9 +114,8 @@ int main(int argc, char * argv[]) {
 	for(const auto& plugin : plugins) {
 		void *handle;
 		plugin_init_t hwio_server_on_load;
-		char *err_msg;
                 
-		handle = dlopen(plugin.c_str(), RTLD_NOW | RTLD_LOCAL | );
+		handle = dlopen(plugin.c_str(), RTLD_NOW | RTLD_LOCAL);
 		if (handle == nullptr) {
 			std::cerr << "[ERROR] Can not load plugin: " << plugin << " Error: " << dlerror() << std::endl;
 			continue;
