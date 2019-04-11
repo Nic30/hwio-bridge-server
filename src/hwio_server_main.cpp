@@ -21,7 +21,7 @@ void print_hwio_server_help() {
 			  << HwioServer::DEFAULT_ADDR << std::endl;
 	std::cout << "--log <level>  logERROR=0, logWARNING=1, logINFO=2, logDEBUG=3" << std::endl;
 	std::cout << "--help to show this help msg" << std::endl;
-	std::cout << "--help to show this help msg" << std::endl;
+	std::cout << "-p <plugin> or --plugin <plugin> to load hwio-server RPC plugin. May be used repetitively." << std::endl;
 	std::cout << hwio_help_str();
 }
 
