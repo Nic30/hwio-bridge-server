@@ -24,3 +24,8 @@ target_link_libraries(hwio-server dl)
 
 # define installation
 install(TARGETS hwio-server DESTINATION bin)
+
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michal Orsak <michal.o.socials@gmail.com>")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+INCLUDE(CPack)
