@@ -20,6 +20,7 @@ find_package(hwio REQUIRED)
 # define executable and dependencies
 add_executable(hwio-server ${hwio-server_SOURCES})
 target_link_libraries(hwio-server hwio)
+target_link_libraries(hwio-server dl)
 
 # define installation
 install(TARGETS hwio-server DESTINATION bin)
